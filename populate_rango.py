@@ -1,4 +1,5 @@
 import os
+import random
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE',
                       'tango_with_django_project.settings')
@@ -11,7 +12,7 @@ from rango.models import Category, Page
 
 def populate():
     python_pages = [{'title': 'Official Python Tutorial', 'url': 'http://docs.python.org/3/tutorial/'},
-                    {'title': 'How to Think Like a Computer Scientist',
+                    {'title': 'How to Think like a Computer Scientist',
                      'url': 'http://www.greenteapress.com/thinkpython/'},
                     {'title': 'Learn Python in 10 Minutes',
                      'url': 'http://www.korokithakis.net/tutorials/python/'}]
@@ -49,10 +50,10 @@ def populate():
             print(f'- {c}: {p}')
 
 
-def add_page(cat, title, url, views=0):
+def add_page(cat, title, url, views = 0):
     p = Page.objects.get_or_create(category=cat, title=title)[0]
     p.url = url
-    p.views = views
+    p.views = random.randint(1,8000)
     p.save()
     return p
 
