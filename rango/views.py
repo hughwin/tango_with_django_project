@@ -10,7 +10,8 @@ from rango.models import Page
 def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
     pages_list = Page.objects.order_by('-views')[:5]
-    context_dict = {'boldmessage': 'Crunchy, creamy, cookie, candy, cupcake!', 'categories': category_list, 'pages' : pages_list}
+    context_dict = {'boldmessage': 'Crunchy, creamy, cookie, candy, cupcake!', 'categories': category_list,
+                    'pages': pages_list}
 
     return render(request, 'rango/index.html', context=context_dict)
 
@@ -33,10 +34,10 @@ def show_category(request, category_name_slug):
     return render(request, 'rango/category.html', context=context_dict)
 
 
-
 def about(request):
     context_dict = {'authormessage': 'This tutorial has been put together by Hugh'}
     return render(request, 'rango/about.html', context=context_dict)
+
 
 def add_category(request):
     form = CategoryForm()
@@ -50,4 +51,4 @@ def add_category(request):
             return redirect('/rango/')
         else:
             print(form.errors)
-    return render(request, 'rango/add_category.html', { 'form' : form})
+    return render(request, 'rango/add_category.html', {'form': form})
