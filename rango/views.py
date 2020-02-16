@@ -1,15 +1,16 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse
-from rango.forms import UserForm, UserProfileForm
-from django.contrib.auth import authenticate, login
 
-
-# Import the category model
 from rango.models import Category
 from rango.models import Page
+from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 
-from rango.forms import CategoryForm, PageForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.urls import reverse
+from django.shortcuts import redirect
 
 
 def index(request):
@@ -44,7 +45,7 @@ def show_category(request, category_name_slug):
 
     return render(request, 'rango/category.html', context=context_dict)
 
-
+@login_required
 def add_category(request):
     form = CategoryForm()
 
@@ -63,7 +64,7 @@ def add_category(request):
             print(form.errors)
     return render(request, 'rango/add_category.html', {'form': form})
 
-
+@login_required
 def add_page(request, category_name_slug):
     try:
         category = Category.objects.get(slug=category_name_slug)
