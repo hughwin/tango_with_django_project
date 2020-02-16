@@ -1,15 +1,16 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse
+from rango.forms import UserForm, UserProfileForm
 
 # Import the category model
 from rango.models import Category
 from rango.models import Page
+
 from rango.forms import CategoryForm, PageForm
 
 
 def index(request):
-
     # ALL categories, descending order of likes, top 5
     category_list = Category.objects.order_by('-likes')[:5]
     page_list = Page.objects.order_by('-views')[:5]
@@ -62,7 +63,6 @@ def add_category(request):
 
 
 def add_page(request, category_name_slug):
-
     try:
         category = Category.objects.get(slug=category_name_slug)
     except Category.DoesNotExist:
@@ -86,9 +86,44 @@ def add_page(request, category_name_slug):
 
                 return redirect(reverse('rango:show_category',
                                         kwargs={'category_name_slug':
-                                                category_name_slug}))
+                                                    category_name_slug}))
         else:
             print(form.errors)
 
     context_dict = {'form': form, 'category': category}
     return render(request, 'rango/add_page.html', context=context_dict)
+
+
+def register(request):
+    registered = False
+
+    if request.method == 'POST':
+        user_form = UserForm(request.POST)
+        profile_form = UserProfileForm(request.POST)
+
+        if user_form.is_valid() and profile_form.is_valid():
+
+            user = user_form.save()
+            user.set_password(user.password)
+            user.save()
+
+            profile = profile_form.save(commit=False)
+            profile.user = user
+
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+
+            profile.save()
+
+            registered = True
+        else:
+            print(user_form.errors, profile_form.errors)
+    else:
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+
+    return render(request,
+                  'rango/register.html',
+                  context={'user_form': user_form,
+                           'profile_form': profile_form,
+                           'registered': registered})
