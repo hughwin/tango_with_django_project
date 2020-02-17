@@ -8,6 +8,10 @@
 {% block body_block %}
 <h1>Rango says...</h1>
 
+
+<p>Visits: {{ visits }}</p>
+
+
 {% if user.is_authenticated %}
     howdy {{user.username }}!
 {% else %}
