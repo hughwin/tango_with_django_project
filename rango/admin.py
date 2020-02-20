@@ -15,4 +15,3 @@ class PageAdmin(admin.ModelAdmin):
 
 admin.site.register(Page, PageAdmin)
 
-# Register your models here.
